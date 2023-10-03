@@ -1,6 +1,7 @@
 package edu.butzlaff.candidatura;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ProcessoSeletivo {
@@ -13,6 +14,28 @@ public class ProcessoSeletivo {
 
         selecaoCandidato();
         imprimirSelecionados();
+
+        for (String candidato: candidatosSelecionados) {
+            entrandoEmContato(candidato);
+        }
+    }
+
+    static void entrandoEmContato(String candidato) {
+        int tentativas = 1;
+        boolean continuaTentando = true;
+        boolean atendeu = false;
+
+        do {
+            atendeu = atender();
+            continuaTentando = !atendeu;
+            if (continuaTentando) tentativas++;
+        } while (continuaTentando && tentativas <= 3);
+
+        if (atendeu) {
+            System.out.println("O candidato " + candidato + " atendeu a ligação na " + tentativas + "ª tentativa.");
+        } else {
+            System.out.println("O candidato " + candidato + " não atendeu a ligação após " + tentativas + " tentativas.");
+        }
     }
 
     static void imprimirSelecionados() {
@@ -43,5 +66,9 @@ public class ProcessoSeletivo {
 
     static double valorPretendido() {
         return ThreadLocalRandom.current().nextDouble(1800.0, 2200.0);
+    }
+
+    static boolean atender() {
+        return new Random().nextInt(3) == 1;
     }
 }
